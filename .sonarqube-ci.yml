@@ -15,14 +15,9 @@
       -alias ${SONAR_SSL_SERVER}
       -file "${SONAR_SSL_CERTIFICATE}"
 
-.get_project_version: &get_project_version
-  - export PROJECT_VERSION="1.0"
-
-sonarqube on merge request:
-  extends: .sonarqube
+.on_merge_request: &on_merge_request
   script:
     - *cacerts
-    - *get_project_version
     - >
       sonar-scanner
       -D"sonar.host.url=$SONAR_SERVER"
@@ -31,11 +26,8 @@ sonarqube on merge request:
       -D"sonar.pullrequest.key=$CI_MERGE_REQUEST_IID"
       -D"sonar.pullrequest.branch=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
       -D"sonar.pullrequest.base=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
-  rules:
-    - if: $CI_MERGE_REQUEST_IID
-
-sonarqube on tag:
-  extends: .sonarqube
+ 
+.on_tag: &on_tag
   script:
     - *cacerts
     - >
@@ -44,5 +36,3 @@ sonarqube on tag:
       -D"sonar.projectVersion=$CI_COMMIT_TAG"
       -D"sonar.branch.name=$CI_DEFAULT_BRANCH"
       -D"sonar.login=$SONAR_LOGIN"
-  rules:
-    - if: $CI_COMMIT_TAG
