@@ -1,0 +1,53 @@
+.ibcmd_create_ib: &ibcmd_create_ib
+  script:
+    - docker-compose -f $DEPLOY_CONFIG -p $DEPLOY_NAME
+      run
+        --rm
+        --entrypoint=""
+      srv /opt/1cv8/current/ibcmd infobase create
+        --db-server=$DB_SERVER
+        --dbms=postgresql
+        --db-name=$DB_NAME
+        --db-user=postgres
+        --create-database
+
+.ibcmd_dump_ib: &ibcmd_dump_ib
+  script:
+    - docker-compose -f $DEPLOY_CONFIG -p $DEPLOY_NAME
+      run
+        --rm
+        --entrypoint=""
+        -v $BACKUP_PATH:/backup
+      srv /opt/1cv8/current/ibcmd infobase dump
+        --db-server=$DB_SERVER
+        --dbms=postgresql
+        --db-name=$DB_NAME
+        --db-user=postgres
+        /backup/$DEPLOY_NAME-$CI_COMMIT_TAG-"`date +"%Y-%m-%d-%H-%M-%S"`".dt
+
+.ibcmd_config_import: &ibcmd_config_import
+  script:
+    - docker-compose -f $DEPLOY_CONFIG -p $DEPLOY_NAME
+      run
+        --rm
+        --entrypoint=""
+        -v $CI_PROJECT_DIR:/build
+      srv /opt/1cv8/current/ibcmd infobase config import
+        --db-server=$DB_SERVER
+        --dbms=postgresql
+        --db-name=$DB_NAME
+        --db-user=postgres
+        /build/xml
+
+.ibcmd_config_apply: &ibcmd_config_apply
+  script:
+    - docker-compose -f $DEPLOY_CONFIG -p $DEPLOY_NAME
+      run
+        --rm
+        --entrypoint=""
+      srv /opt/1cv8/current/ibcmd infobase config apply
+        --db-server=db
+        --dbms=postgresql
+        --db-name=$DB_NAME
+        --db-user=postgres
+        --force
