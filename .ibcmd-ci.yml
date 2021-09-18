@@ -4,7 +4,7 @@
       run
         --rm
         --entrypoint=""
-      srv /opt/1cv8/current/ibcmd infobase create
+      $IB_SERVER /opt/1cv8/current/ibcmd infobase create
         --db-server=$DB_SERVER
         --dbms=postgresql
         --db-name=$DB_NAME
@@ -18,7 +18,7 @@
         --rm
         --entrypoint=""
         -v $BACKUP_PATH:/backup
-      srv /opt/1cv8/current/ibcmd infobase dump
+      $IB_SERVER /opt/1cv8/current/ibcmd infobase dump
         --db-server=$DB_SERVER
         --dbms=postgresql
         --db-name=$DB_NAME
@@ -32,7 +32,7 @@
         --rm
         --entrypoint=""
         -v $CI_PROJECT_DIR:/build
-      srv /opt/1cv8/current/ibcmd infobase config import
+      $IB_SERVER /opt/1cv8/current/ibcmd infobase config import
         --db-server=$DB_SERVER
         --dbms=postgresql
         --db-name=$DB_NAME
@@ -45,8 +45,8 @@
       run
         --rm
         --entrypoint=""
-      srv /opt/1cv8/current/ibcmd infobase config apply
-        --db-server=db
+      $IB_SERVER /opt/1cv8/current/ibcmd infobase config apply
+        --db-server=$DB_SERVER
         --dbms=postgresql
         --db-name=$DB_NAME
         --db-user=postgres
