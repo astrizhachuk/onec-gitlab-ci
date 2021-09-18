@@ -39,7 +39,7 @@ sonarqube on tag:
 
 #### xml
 
-Переопределение `PROJECT_VERSION` при merge request и увеличение памяти сканера при установке tag для выгрузки файлов из 1с в xml.
+Переопределение `PROJECT_VERSION` при merge request и увеличение памяти сканера при установке tag для выгрузки файлов из 1С в xml.
 
 ```gitlab
 sonarqube on merge request:
@@ -80,5 +80,38 @@ sonarqube on tag:
     - .on_tag
   rules:
     - if: $CI_COMMIT_TAG
+```
 
+## .ibcmd-ci.yml
+
+Операции ibcmd в контейнерах (сервисах) docker.
+
+* `DEPLOY_CONFIG` - путь к файлу `yml` с конфигурацией сервисов docker-compose;
+* `DEPLOY_NAME` - имя для префиксации сервисов docker-compose (флаг `-p`);
+* `IB_SERVER` - имя сервиса сервера 1С;
+* `DB_SERVER` - имя сервиса базы данных PostgreSQL;
+* `DB_NAME` - имя базы данных;
+
+### Пример
+
+```gitlab
+variables:
+  DEPLOY_CONFIG: "configs/production.yml"
+  DEPLOY_NAME: production
+  IB_SERVER: "srv"
+  IB_NAME: "my_ib"
+  DB_SERVER: "db"
+  DB_NAME: "my_db"
+
+include:
+  - project: 'devops/gitlab-ci'
+    file: '/.ibcmd-ci.yml'
+
+import config:
+  stage: import
+  script:
+    - echo "config import"
+    - !reference [.ibcmd_config_import, script]
+  rules:
+    - if: $CI_COMMIT_TAG
 ```
