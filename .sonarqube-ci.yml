@@ -26,6 +26,15 @@
         -D"sonar.pullrequest.branch=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
         -D"sonar.pullrequest.base=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
  
+.on_commit: &on_commit
+  script:
+    - *cacerts
+    - sonar-scanner
+        -D"sonar.host.url=$SONAR_SERVER"
+        -D"sonar.projectVersion=$CI_COMMIT_SHORT_SHA"
+        -D"sonar.branch.name=$CI_DEFAULT_BRANCH"
+        -D"sonar.login=$SONAR_LOGIN"
+
 .on_tag: &on_tag
   script:
     - *cacerts
