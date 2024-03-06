@@ -5,7 +5,7 @@
     PROJECT_VERSION: "1.0"
     SONAR_SCANNER_OPTS: "-Xmx4g"
   image:
-    name: $CI_REGISTRY/devops/sonar-scanner-cli:latest
+    name: sonarsource/sonar-scanner-cli:5
     entrypoint: [""]
   tags:
     - 1c
