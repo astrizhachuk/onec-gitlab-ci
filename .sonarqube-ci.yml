@@ -8,7 +8,7 @@
     name: sonarsource/sonar-scanner-cli:5
     entrypoint: [""]
   tags:
-    - 1c
+    - sonarcube
 
 .cacerts: &cacerts
   - keytool -cacerts -storepass changeit -noprompt -trustcacerts -importcert
